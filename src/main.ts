@@ -1,8 +1,18 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+
+  app.enableCors();
+  
+  const configService = app.get(ConfigService)
+  
+
+  const port =  configService.get<string>('PORT')
+  await app.listen(port, () => console.log(`app listening at port ${port} at ${new Date().toISOString()}`));
+  
 }
-bootstrap();
+bootstrap().catch(err => console.error(err));
+
